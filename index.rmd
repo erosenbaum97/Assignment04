@@ -1,5 +1,5 @@
 ---
-title: "index.rmd"
+title: "Visualizations of Data Concerning COVID-19 in the United States"
 author: "Ethan Rosenbaum and Yujing Wang"
 date: "2/25/2022"
 output: html_document
@@ -12,7 +12,9 @@ library(dplyr)
 library(ggplot2)
 library(tidyverse)
 ```
-## Chart 1: Density Curve of Death Rates
+All Data Sourced from "https://covid.cdc.gov/covid-data-tracker/#cases_casesper100klast7days" and "https://covid.cdc.gov/covid-data-tracker/#vaccinations_vacc-total-admin-rate-total" 
+
+# Chart 1: Density Curve of Death Rates
 ```{r}
 testingdata <- read.csv("cases_deaths_and_testing_by_state.csv")
 vaccinedata <- read.csv("covid19_vaccinations.csv")
@@ -28,18 +30,29 @@ dens <- ggplot(data, aes(x=deaths, color = deaths)) +
        caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker")
 dens
 ```
-## Chart 2: Lollipop Chart of Testing Rates in Northeast
+The density plot above displays the various concentration of death rates per 100,000 residents as a culmination of the data of each state and territory within the U.S. The wide variety could be evidence of the widely disparate responses to the COVID-19 pandemic by different state governments, or perhaps different levels of death data collection by different states. 
+
+# Chart 2: Lollipop Chart of Testing Rates
 ```{r}
 caserate <- as.numeric(data$Case.Rate.per.100000)
 testloll <- ggplot(data, aes(x = State.Territory, y = caserate))+
   geom_point(size=3, color ="lightblue") +
   geom_segment(aes(x=State.Territory, xend=State.Territory,
                    y=0, yend= caserate),
-                   color = "darkblue")+
-  scale_y_continuous(breaks = seq(0, 30000, 5000))
+               linetype = 3,
+                   color = "darkblue",)+
+  scale_y_continuous(breaks = seq(0, 30000, 5000))+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  labs( title = "COVID-19 Case Rate in the United States, by State and Territory",
+    x = "State or Territory",
+    y = "COVID-19 Case Rate per 100,000",
+    subtitle = "COVID-19 Case Rate per 100,000 Residents",
+    caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker") 
 testloll
 ```
-## Chart 3: COVID-19 Death Rate by State and Territory
+The "lollipop" chart above indicates the COVID-19 case rate across every state and territory in the United States. The particularly low rates in the island territories may be a result of their relative isolation, and it is notable that Rhode Island had the highest rate even hough other geographically and demographically similar states, such as Vermont and Maine, were among the lowest. This could be because of different policiess, different methods of data collection, or some other external factor. 
+
+# Chart 3: COVID-19 Death Rate by State and Territory
 ```{r}
 bar <- ggplot(data, aes(x = State.Territory, y = as.numeric(Death.Rate.per.100000))) +
   geom_bar(stat = "identity",
@@ -54,10 +67,13 @@ bar <- ggplot(data, aes(x = State.Territory, y = as.numeric(Death.Rate.per.10000
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 bar
 ```
-### Chart 4: 
+The bar chart above shows the COVID-19 death rate per 100,000 residents in each state and territory of the United States. As shown in the graph, Arkansas, Delaware, Vermont have some of the highest COVID-19 death rates. This could indicate that the governments of these states should invest more resources in COVID-19 prevention and treatment programs.
+
+# Chart 4: 
 ```{r}
 plot <- ggplot(data, aes(x = as.numeric(Case.Rate.per.100000), y = as.numeric(Doses.Delivered.per.100K))) +
-  geom_point(stat = "identity",
+  geom_jitter(stat = "identity",
+             position = "jitter",
              color = "firebrick",
              shape = "diamond") +
    labs(
@@ -68,4 +84,5 @@ plot <- ggplot(data, aes(x = as.numeric(Case.Rate.per.100000), y = as.numeric(Do
     caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker") 
 plot
 ```
+The scatter plot above is designed to show the relationship between the case rate of COVID-19 and the doses delivered rate of COVID-19 vaccinations in each state and territory within the United States. As the graph shows, there is a noticeably negative relationship between these two variables. This could indicate that vaccination has a significant effect on mitigating COVID-19 cases. If this relationship is proven to be one of causation, the CDC and other health institutions should continue encourage citizens to get vaccinated.
 

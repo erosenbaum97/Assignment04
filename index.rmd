@@ -1,6 +1,6 @@
 ---
 title: "index.rmd"
-author: "Ethan Rosenbaum"
+author: "Ethan Rosenbaum，Yujing Wang"
 date: "2/18/2022"
 output: html_document
 ---

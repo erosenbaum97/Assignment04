@@ -11,10 +11,8 @@ library(haven)
 library(dplyr)
 library(ggplot2)
 ```
-
 ## Chart 1: Density Curve of Death Rates
 ```{r}
-
 testingdata <- read.csv("cases_deaths_and_testing_by_state.csv")
 vaccinedata <- read.csv("covid19_vaccinations.csv")
 data <- left_join(testingdata,vaccinedata)
@@ -27,6 +25,17 @@ dens <- ggplot(data, aes(x=deaths, color = deaths)) +
        subtitle = "Density of Deaths as a Result of COVID-19 Across Every State",
        caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker")
 dens
+```
+## Chart 2: Lollipop Chart of Testing Rates in Northeast
+```{r}
+caserate <- as.numeric(data$Case.Rate.per.100000)
+testloll <- ggplot(data, aes(x = State.Territory, y = caserate))+
+  geom_point(size=3, color ="lightblue") +
+  geom_segment(aes(x=State.Territory, xend=State.Territory,
+                   y=0, yend= caserate),
+                   color = "darkblue")+
+  scale_y_continuous(breaks = seq(0, 30000, 5000))
+testloll
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

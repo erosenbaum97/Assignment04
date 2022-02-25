@@ -60,7 +60,7 @@ vac_death %>%
        x = "Case Rate per 100k",
        y = "Doses Delivered per 110K")
 
-# The scatter plot below is designed to show the relationship between the case rate of COVID-19 and the doses delivered rate of COVID-19 vaccinations in each state of the United States. As the graph show, there is a negative relationship between these two variables. It means that vaccination has a positive effect to the COVID. In this way, CDC and other health institutions should encourage citizens to get the vaccination. 
+# The scatter plot below is designed to show the relationship between the case rate of COVID-19 and the doses delivered rate of COVID-19 vaccinations in each state of the United States. As the graph show, there is a negative relationship between these two variables. It means that vaccination has a positive effect to the COVID-19. In this way, CDC and other health institutions should encourage citizens to get the vaccination.
 ```
 
 

@@ -17,18 +17,20 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 library(haven)
-data <- read_stata("h216.dta")
-library(ggplot2)
-ggplot(data,aes(AGE19X,WAGEP19X)) +
-  geom_point(color="blue")
-
-data %>%
-  ggplot(data,aes())
-  geom_line()
-num_cols <- unlist(lapply(data, is.numeric))
-data_num <- data[ , num_cols]                        # Subset numeric columns of data
-data_num
-View(data_num)
+testingdata <- read.csv("cases_deaths_and_testing_by_state.csv")
+vaccinedata <- read.csv("covid19_vaccinations.csv")
+data <- left_join(testingdata,vaccinedata)
+View(data)
+theme_set(theme_classic())
+dens <- ggplot(data, aes(x=New.Deaths, color = New.Deaths)) +
+  geom_density(alpha = 0.9)
+deaths <- as.numeric(data$Death.Rate.per.100000)
+dens
+dens <- ggplot(data, aes(x=deaths, color = deaths)) +
+  geom_density(color="darkblue", fill="lightblue", alpha = 0.9) +
+  labs(title = "Density Curve of Deaths per 100,000 Across Every State",
+       x = "Deaths per 100,000 Residents",
+       y = "Density")
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

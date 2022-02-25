@@ -17,6 +17,7 @@ library(tidyverse)
 testingdata <- read.csv("cases_deaths_and_testing_by_state.csv")
 vaccinedata <- read.csv("covid19_vaccinations.csv")
 data <- left_join(testingdata,vaccinedata)
+data <- data[-c(36), ]
 deaths <- as.numeric(data$Death.Rate.per.100000)
 dens <- ggplot(data, aes(x=deaths, color = deaths)) +
   geom_density(color="darkblue", fill="lightblue", alpha = 0.9) +
@@ -38,7 +39,7 @@ testloll <- ggplot(data, aes(x = State.Territory, y = caserate))+
   scale_y_continuous(breaks = seq(0, 30000, 5000))
 testloll
 ```
-## Chart 3: COVID=19 Death Rate by State
+## Chart 3: COVID-19 Death Rate by State and Territory
 ```{r}
 bar <- ggplot(data, aes(x = State.Territory, y = as.numeric(Death.Rate.per.100000))) +
   geom_bar(stat = "identity",
@@ -46,12 +47,25 @@ bar <- ggplot(data, aes(x = State.Territory, y = as.numeric(Death.Rate.per.10000
            alpha = 0.8)+
   labs(
     title = "COVID-19 Death Rate in the United States, by State",
-    x = "State",
+    x = "State or Territory",
     y = "COVID-19 Death Rate per 100,000",
     subtitle = "COVID-19 Death Rate per 100,000 Residents",
     caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 bar
 ```
-
+### Chart 4: 
+```{r}
+plot <- ggplot(data, aes(x = as.numeric(Case.Rate.per.100000), y = as.numeric(Doses.Delivered.per.100K))) +
+  geom_point(stat = "identity",
+             color = "firebrick",
+             shape = "diamond") +
+   labs(
+    title = "COVID-19 Case and Dosage Rate in the United States",
+    x = "COVID-19 Case Rate per 100,000 Residents",
+    y = "COVID-19 Vaccine Dose Rate per 100,000 Residents",
+    subtitle = "COVID-19 Case Rate Compared to Vaccine Dose Rate per 100,000 Residents by State or Territory",
+    caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker") 
+plot
+```
 

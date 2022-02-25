@@ -1,36 +1,32 @@
 ---
 title: "index.rmd"
-author: "Ethan Rosenbaum"
-date: "2/18/2022"
+author: "Ethan Rosenbaum and Yujing Wang"
+date: "2/25/2022"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(haven)
+library(dplyr)
+library(ggplot2)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
+## Chart 1: Density Curve of Death Rates
 ```{r}
-library(haven)
+
 testingdata <- read.csv("cases_deaths_and_testing_by_state.csv")
 vaccinedata <- read.csv("covid19_vaccinations.csv")
 data <- left_join(testingdata,vaccinedata)
-View(data)
-theme_set(theme_classic())
-dens <- ggplot(data, aes(x=New.Deaths, color = New.Deaths)) +
-  geom_density(alpha = 0.9)
 deaths <- as.numeric(data$Death.Rate.per.100000)
-dens
 dens <- ggplot(data, aes(x=deaths, color = deaths)) +
   geom_density(color="darkblue", fill="lightblue", alpha = 0.9) +
-  labs(title = "Density Curve of Deaths per 100,000 Across Every State",
+  labs(title = "Density Curve of COVID-19 Deaths per 100,000",
        x = "Deaths per 100,000 Residents",
-       y = "Density")
+       y = "Density",
+       subtitle = "Density of Deaths as a Result of COVID-19 Across Every State",
+       caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker")
+dens
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

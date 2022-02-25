@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 ## R Markdown
@@ -14,6 +14,58 @@ knitr::opts_chunk$set(echo = TRUE)
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+vaccination <- read.csv("covid19_vaccinations.csv")
+death <- read.csv("cases_deaths_and_testing_by_state.csv")
+library(tidyverse)
+vac_death <- left_join(vaccination,death)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+```
+
+```{r}
+vac_death %>%
+  ggplot() +
+  geom_bar(aes(x = State.Territory,  y = as.numeric(Death.Rate.per.100000)), 
+           stat = "identity",
+           fill = "lightcoral",
+           alpha = 0.8    )+
+  labs(
+    title = "COVID-19 Death Rate in the United States",
+    subtitle = "By state",
+    x = "State",
+    y = "Death Rate per 100K"
+  )+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+# The bar chart below shows the COVID-19 death rate per 100K in each state of the United States. As shown in the graph, Arkansas, Delaware Vermont and other states have the higher COVID-19 death rate than others. Government in these states should strengthen medical power , hire more people to save people' life. 
+
+```
+
+```{r}
+library(dplyr)
+vac_death %>%
+  ggplot()+
+  geom_point(aes(x = as.numeric(Case.Rate.per.100000), y = as.numeric(Doses.Delivered.per.100K)),
+             stat = "identity",
+             color = "firebrick",
+             shape = "diamond"
+)+
+  labs(title = "Covid-19 Case Rate vs. Covid-19 Vaccinations Doses Delivered Rate",
+       subtitle = "Each point represents a state in the U.S",
+       x = "Case Rate per 100k",
+       y = "Doses Delivered per 110K")
+
+# The scatter plot below is designed to show the relationship between the case rate of COVID-19 and the doses delivered rate of COVID-19 vaccinations in each state of the United States. As the graph show, there is a negative relationship between these two variables. It means that vaccination has a positive effect to the COVID. In this way, CDC and other health institutions should encourage citizens to get the vaccination. 
+```
+
+
+
+
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

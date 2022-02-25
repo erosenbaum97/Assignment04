@@ -1,2 +1,4 @@
-Assignment 04
-Ethan Rosenbaum and Yujing Wang
+---
+title: "Assignment 04"
+author: "Ethan Rosenbaum and Yujing Wang"
+---

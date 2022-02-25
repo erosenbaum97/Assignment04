@@ -1,71 +1,90 @@
 ---
-title: "index.rmd"
-author: "Ethan Rosenbaum，Yujing Wang"
-date: "2/18/2022"
+title: "Visualizations of Data Concerning COVID-19 in the United States"
+author: "Ethan Rosenbaum and Yujing Wang"
+date: "2/25/2022"
+=======
+
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
-vaccination <- read.csv("covid19_vaccinations.csv")
-death <- read.csv("cases_deaths_and_testing_by_state.csv")
-library(tidyverse)
-vac_death <- left_join(vaccination,death)
-```
-
-```{r}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(haven)
+library(dplyr)
 library(ggplot2)
 library(tidyverse)
-library(dplyr)
+=======
 ```
+All Data Sourced from "https://covid.cdc.gov/covid-data-tracker/#cases_casesper100klast7days" and "https://covid.cdc.gov/covid-data-tracker/#vaccinations_vacc-total-admin-rate-total" 
 
+# Chart 1: Density Curve of Death Rates
 ```{r}
-vac_death %>%
-  ggplot() +
-  geom_bar(aes(x = State.Territory,  y = as.numeric(Death.Rate.per.100000)), 
-           stat = "identity",
+testingdata <- read.csv("cases_deaths_and_testing_by_state.csv")
+vaccinedata <- read.csv("covid19_vaccinations.csv")
+data <- left_join(testingdata,vaccinedata)
+data <- data[-c(36), ]
+deaths <- as.numeric(data$Death.Rate.per.100000)
+dens <- ggplot(data, aes(x=deaths, color = deaths)) +
+  geom_density(color="darkblue", fill="lightblue", alpha = 0.9) +
+  labs(title = "Density Curve of COVID-19 Deaths per 100,000",
+       x = "Deaths per 100,000 Residents",
+       y = "Density",
+       subtitle = "Density of Deaths as a Result of COVID-19 Across Every State",
+       caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker")
+dens
+```
+The density plot above displays the various concentration of death rates per 100,000 residents as a culmination of the data of each state and territory within the U.S. The wide variety could be evidence of the widely disparate responses to the COVID-19 pandemic by different state governments, or perhaps different levels of death data collection by different states. 
+
+# Chart 2: Lollipop Chart of Testing Rates
+```{r}
+caserate <- as.numeric(data$Case.Rate.per.100000)
+testloll <- ggplot(data, aes(x = State.Territory, y = caserate))+
+  geom_point(size=3, color ="lightblue") +
+  geom_segment(aes(x=State.Territory, xend=State.Territory,
+                   y=0, yend= caserate),
+               linetype = 3,
+                   color = "darkblue",)+
+  scale_y_continuous(breaks = seq(0, 30000, 5000))+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  labs( title = "COVID-19 Case Rate in the United States, by State and Territory",
+    x = "State or Territory",
+    y = "COVID-19 Case Rate per 100,000",
+    subtitle = "COVID-19 Case Rate per 100,000 Residents",
+    caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker") 
+testloll
+```
+The "lollipop" chart above indicates the COVID-19 case rate across every state and territory in the United States. The particularly low rates in the island territories may be a result of their relative isolation, and it is notable that Rhode Island had the highest rate even hough other geographically and demographically similar states, such as Vermont and Maine, were among the lowest. This could be because of different policiess, different methods of data collection, or some other external factor. 
+
+# Chart 3: COVID-19 Death Rate by State and Territory
+```{r}
+bar <- ggplot(data, aes(x = State.Territory, y = as.numeric(Death.Rate.per.100000))) +
+  geom_bar(stat = "identity",
            fill = "lightcoral",
-           alpha = 0.8    )+
+           alpha = 0.8)+
   labs(
-    title = "COVID-19 Death Rate in the United States",
-    subtitle = "By state",
-    x = "State",
-    y = "Death Rate per 100K"
-  )+
+    title = "COVID-19 Death Rate in the United States, by State",
+    x = "State or Territory",
+    y = "COVID-19 Death Rate per 100,000",
+    subtitle = "COVID-19 Death Rate per 100,000 Residents",
+    caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
-# The bar chart below shows the COVID-19 death rate per 100K in each state of the United States. As shown in the graph, Arkansas, Delaware Vermont and other states have the higher COVID-19 death rate than others. Government in these states should strengthen medical power , hire more people to save people' life. 
-
+bar
 ```
+The bar chart above shows the COVID-19 death rate per 100,000 residents in each state and territory of the United States. As shown in the graph, Arkansas, Delaware, Vermont have some of the highest COVID-19 death rates. This could indicate that the governments of these states should invest more resources in COVID-19 prevention and treatment programs.
 
+# Chart 4: 
 ```{r}
-library(dplyr)
-vac_death %>%
-  ggplot()+
-  geom_point(aes(x = as.numeric(Case.Rate.per.100000), y = as.numeric(Doses.Delivered.per.100K)),
-             stat = "identity",
+plot <- ggplot(data, aes(x = as.numeric(Case.Rate.per.100000), y = as.numeric(Doses.Delivered.per.100K))) +
+  geom_jitter(stat = "identity",
+             position = "jitter",
              color = "firebrick",
-             shape = "diamond"
-)+
-  labs(title = "Covid-19 Case Rate vs. Covid-19 Vaccinations Doses Delivered Rate",
-       subtitle = "Each point represents a state in the U.S",
-       x = "Case Rate per 100k",
-       y = "Doses Delivered per 110K")
-
-# The scatter plot below is designed to show the relationship between the case rate of COVID-19 and the doses delivered rate of COVID-19 vaccinations in each state of the United States. As the graph show, there is a negative relationship between these two variables. It means that vaccination has a positive effect to the COVID-19. In this way, CDC and other health institutions should encourage citizens to get the vaccination.
+             shape = "diamond") +
+   labs(
+    title = "COVID-19 Case and Dosage Rate in the United States",
+    x = "COVID-19 Case Rate per 100,000 Residents",
+    y = "COVID-19 Vaccine Dose Rate per 100,000 Residents",
+    subtitle = "COVID-19 Case Rate Compared to Vaccine Dose Rate per 100,000 Residents by State or Territory",
+    caption = "Source: Center for Disease Control and Prevention: COVID Data Tracker") 
+plot
 ```
-
-
-
-
-
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The scatter plot above is designed to show the relationship between the case rate of COVID-19 and the doses delivered rate of COVID-19 vaccinations in each state and territory within the United States. As the graph shows, there is a noticeably negative relationship between these two variables. This could indicate that vaccination has a significant effect on mitigating COVID-19 cases. If this relationship is proven to be one of causation, the CDC and other health institutions should continue encourage citizens to get vaccinated.

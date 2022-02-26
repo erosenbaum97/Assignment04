@@ -88,7 +88,7 @@ plot
 The scatter plot above is designed to show the relationship between the case rate of COVID-19 and the doses delivered rate of COVID-19 vaccinations in each state and territory within the United States. As the graph shows, there is a noticeably negative relationship between these two variables. This could indicate that vaccination has a significant effect on mitigating COVID-19 cases. If this relationship is proven to be one of causation, the CDC and other health institutions should continue encourage citizens to get vaccinated.
 
 # Stretch Screenshots
-```{r pressure, echo=FALSE, fig.cap="Screenshot", out.width = '100%'}
-knitr::include_graphics(c("yujing.png","EthanGit.png"))
-```
+![yujing stretch1](yujing.png)
+
+![image](https://user-images.githubusercontent.com/99366385/155822470-734eb5fc-7598-405e-84ce-309867b60e9a.png)
 

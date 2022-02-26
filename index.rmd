@@ -72,7 +72,7 @@ bar
 ```
 The bar chart above shows the COVID-19 death rate per 100,000 residents in each state and territory of the United States. As shown in the graph, Arkansas, Delaware, Vermont have some of the highest COVID-19 death rates. This could indicate that the governments of these states should invest more resources in COVID-19 prevention and treatment programs.
 
-# Chart 4: 
+# Chart 4: Scatterplot of Dosage and Vaccination Rates
 ```{r}
 plot <- ggplot(data, aes(x = as.numeric(Case.Rate.per.100000), y = as.numeric(Doses.Delivered.per.100K))) +
   geom_jitter(stat = "identity",
